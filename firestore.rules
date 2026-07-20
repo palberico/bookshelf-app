@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // One shared family library, not per-account: every signed-in family
+    // member (accounts are added directly in the Firebase console, no
+    // self-serve signup) reads and writes the same "family" bucket. Reads
+    // are public so the shelf can be viewed without signing in; only writes
+    // require an authenticated session.
+    match /users/{uid}/books/{bookId} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.cellId is string;
+      allow update, delete: if request.auth != null;
+    }
+  }
+}
