@@ -246,18 +246,17 @@ const LAYOUT = [
       {
         height: 337,
         books: {
-          count: 3,
-          palette: "blackLeather",
-          spread: 0.28,
           align: "fill",
-          wMin: 9,
-          wRange: 2.5,
-          hMin: 86,
-          hRange: 5,
+          spread: 0.56,
+          spines: [
+            { w: 9, h: 90, color: "#141414" },
+            { w: 8.5, h: 90, color: "#241f1a" },
+            { w: 9, h: 90, color: "#1f1f1f" },
+          ],
         },
         decor: [
-          { side: "left", width: 0.3, label: "agate slice", art: "agateSlice" },
-          { side: "right", width: 0.3, label: "agate slice", art: "agateSlice" },
+          { side: "left", width: 0.22, label: "agate bookend", art: "agateSlice" },
+          { side: "right", width: 0.22, label: "agate bookend", art: "agateSlice" },
         ],
       },
       { height: 305, decor: { side: "full", label: "framed print", art: "framedPrint" } },
@@ -304,8 +303,14 @@ const LAYOUT = [
     id: "F",
     width: 370,
     cells: [
-      { height: 360, books: { count: 22, palette: "christie", spread: 1, align: "fill" } },
-      { height: 320, books: { count: 22, palette: "christie", spread: 1, align: "fill" } },
+      {
+        height: 360,
+        books: { count: 22, palette: "christie", spread: 1, align: "fill", hMin: 90, hRange: 3 },
+      },
+      {
+        height: 320,
+        books: { count: 22, palette: "christie", spread: 1, align: "fill", hMin: 90, hRange: 3 },
+      },
       { height: 320, books: { count: 20, palette: "paperback", spread: 1, align: "fill" } },
       { height: 370, books: { count: 22, palette: "bright", spread: 1, align: "fill" } },
       {
@@ -458,7 +463,12 @@ const PALETTES = {
   deep: ["#1a1a1a", "#22242a", "#2b2b2b", "#141414", "#3a1a1a"],
   paperback: ["#c94a3a", "#3f7fa5", "#e2dcc8", "#7d8a5a", "#b5723c", "#5d5f78", "#a9b3bd"],
   ya: ["#2f7fc4", "#1b2a44", "#c9c2b2", "#7a3f6a", "#d9d3c4", "#3f4f6a", "#b5476b"],
-  christie: ["#e0d8bc", "#d6cfae", "#c9bfa0", "#e8e2cc", "#b9ad8c", "#cbb9a8", "#d9c6b0"],
+  christie: [
+    "#e0d8bc", "#d6cfae", "#c9bfa0", "#e8e2cc", "#b9ad8c", "#cbb9a8", "#d9c6b0",
+    "#ded4b6", "#e6ddc4", "#cfc4a6", "#e3d9bd", "#c4b89a", "#d2c7ab", "#ece3ca",
+    "#dccdb0", "#c8bda0", "#e0d4b4",
+    "#1c2c4a", "#151515", "#2c4a34", "#7a2320", "#c98a8a",
+  ],
   christieHard: ["#151515", "#1c1c1c", "#101010", "#232323", "#8f2f2f", "#191919"],
   modern: ["#e6e0d2", "#6a7f8a", "#8a6a7f", "#c4b89c", "#3f4a5a", "#a89a7c", "#d4cdbc"],
   bright: ["#d4a03c", "#3f8a7a", "#c94a4a", "#4a6fb5", "#e2dcc8", "#7a4a86", "#5a9a4a"],
@@ -800,56 +810,48 @@ function PaintingCandlesticks() {
 }
 
 function AgateSlice() {
+  const dome = "M4,97 L4,48 A46,46 0 0 1 96,48 L96,97 Z";
   return (
     <svg
       viewBox="0 0 100 100"
       preserveAspectRatio="xMidYMax meet"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Polished agate slice"
+      aria-label="Agate bookend, half of a polished geode"
     >
       <defs>
-        <radialGradient id="vbAgate" cx="0.45" cy="0.4" r="0.62">
+        <radialGradient id="vbAgate" cx="0.45" cy="0.25" r="0.75">
           <stop offset="0%" stopColor="#f6f3ea" />
           <stop offset="52%" stopColor="#ded7c7" />
           <stop offset="100%" stopColor="#bdae95" />
         </radialGradient>
         <clipPath id="vbAgateClip">
-          <path d="M50,3 C75,3 97,24 97,50 C97,77 74,97 49,97 C25,97 3,77 3,50 C3,24 25,3 50,3 Z" />
+          <path d={dome} />
         </clipPath>
       </defs>
 
-      <path
-        d="M50,3 C75,3 97,24 97,50 C97,77 74,97 49,97 C25,97 3,77 3,50 C3,24 25,3 50,3 Z"
-        fill="url(#vbAgate)"
-      />
+      <path d={dome} fill="url(#vbAgate)" />
 
       <g clipPath="url(#vbAgateClip)">
         <path
-          d="M6,66 C18,60 26,72 38,70 C30,84 16,92 6,88 Z"
+          d="M4,70 C16,62 26,74 38,71 C28,86 14,94 4,90 Z"
           fill="#33513c"
           opacity="0.88"
         />
-        <path d="M12,70 C20,67 25,74 31,73 C26,81 18,85 12,82 Z" fill="#20372a" opacity="0.7" />
+        <path d="M8,74 C16,70 23,76 29,75 C24,83 15,87 9,84 Z" fill="#20372a" opacity="0.7" />
         <path
-          d="M62,58 C74,52 86,58 92,70 C82,80 68,78 60,70 Z"
+          d="M64,60 C78,54 90,60 96,72 C86,84 70,80 62,72 Z"
           fill="#35543e"
           opacity="0.82"
         />
-        <path d="M70,62 C78,59 85,63 88,70 C81,75 72,73 68,68 Z" fill="#22392c" opacity="0.65" />
-        <path d="M40,10 C50,6 60,10 64,18 C54,22 44,20 38,16 Z" fill="#3a5a42" opacity="0.45" />
-        <ellipse cx="46" cy="42" rx="20" ry="16" fill="#fbf9f2" opacity="0.75" />
-        <ellipse cx="46" cy="42" rx="12" ry="9" fill="#ffffff" opacity="0.7" />
+        <path d="M72,64 C80,61 87,65 91,72 C83,78 74,75 70,70 Z" fill="#22392c" opacity="0.65" />
+        <path d="M38,14 C48,9 60,12 65,20 C54,25 43,23 36,19 Z" fill="#3a5a42" opacity="0.4" />
+        <ellipse cx="48" cy="38" rx="24" ry="18" fill="#fbf9f2" opacity="0.75" />
+        <ellipse cx="48" cy="38" rx="14" ry="10" fill="#ffffff" opacity="0.7" />
       </g>
 
-      <path
-        d="M50,3 C75,3 97,24 97,50 C97,77 74,97 49,97 C25,97 3,77 3,50 C3,24 25,3 50,3 Z"
-        fill="none"
-        stroke="#8f7f66"
-        strokeWidth="2.4"
-        opacity="0.75"
-      />
-      <ellipse cx="50" cy="97.5" rx="26" ry="2" fill="#000" opacity="0.12" />
+      <path d={dome} fill="none" stroke="#8f7f66" strokeWidth="2.4" opacity="0.75" />
+      <ellipse cx="50" cy="97.5" rx="30" ry="2" fill="#000" opacity="0.12" />
     </svg>
   );
 }
