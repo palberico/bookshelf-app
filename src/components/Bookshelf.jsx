@@ -1398,16 +1398,34 @@ function CuckooClock() {
   );
 }
 
-function OilLamp() {
+function OilLamp({ lit }) {
   return (
     <svg
       viewBox="0 0 60 100"
       preserveAspectRatio="xMidYMax meet"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Oil lamp with glass chimney"
+      aria-label={lit ? "Oil lamp, lit" : "Oil lamp, unlit"}
     >
+      <defs>
+        <radialGradient id="vbLampGlow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#ffdb8a" stopOpacity="0.85" />
+          <stop offset="55%" stopColor="#f6b94a" stopOpacity="0.32" />
+          <stop offset="100%" stopColor="#f6b94a" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
       <ellipse cx="30" cy="97.2" rx="22" ry="1.6" fill="#000" opacity="0.14" />
+
+      <ellipse
+        cx="30"
+        cy="46"
+        rx="27"
+        ry="32"
+        fill="url(#vbLampGlow)"
+        opacity={lit ? 1 : 0}
+        style={{ transition: "opacity 240ms ease" }}
+      />
 
       {/* glass chimney */}
       <path
@@ -1427,8 +1445,23 @@ function OilLamp() {
       <path d="M39.4,62 L39.4,44" stroke="#ffffff" strokeWidth="0.9" opacity="0.3" fill="none" />
 
       {/* bulb */}
-      <ellipse cx="30" cy="48" rx="5.6" ry="7.4" fill="#f6cd86" opacity="0.55" />
-      <g stroke="#e8722c" strokeWidth="1.1" strokeLinecap="round" fill="none">
+      <ellipse
+        cx="30"
+        cy="48"
+        rx="5.6"
+        ry="7.4"
+        fill={lit ? "#ffdd8f" : "#f6cd86"}
+        opacity={lit ? 0.95 : 0.4}
+        style={{ transition: "opacity 240ms ease, fill 240ms ease" }}
+      />
+      <g
+        stroke={lit ? "#ff9a3c" : "#e8722c"}
+        strokeWidth="1.1"
+        strokeLinecap="round"
+        fill="none"
+        opacity={lit ? 1 : 0.4}
+        style={{ transition: "opacity 240ms ease, stroke 240ms ease" }}
+      >
         <path d="M27.6,52 L32.4,50.4 M27.6,49.6 L32.4,48 M27.6,47.2 L32.4,45.6 M27.6,44.8 L32.4,43.2" />
       </g>
       <rect x="26.6" y="55" width="6.8" height="5" rx="0.6" fill="#3a3a3a" />
@@ -2328,17 +2361,41 @@ function BookGroup({ cellId, books, midDecor, style }) {
   );
 }
 
-function ContentSegment({ cellId, seg, index }) {
+function ContentSegment({ cellId, seg, index, lampOn, onToggleLamp }) {
   const width = `${(seg.width || 0.1) * 100}%`;
 
   if (seg.decor) {
     const Art = seg.decor.art ? ART[seg.decor.art] : null;
+    const isLamp = seg.decor.art === "oilLamp";
     return (
       <div className="vb-seg" style={{ width }}>
         {Art ? (
-          <div className="vb-art">
-            <Art />
-          </div>
+          isLamp ? (
+            <div
+              className={["vb-art", "vb-lamp", lampOn ? "is-lit" : ""].join(" ")}
+              role="button"
+              tabIndex={0}
+              aria-pressed={lampOn}
+              aria-label={lampOn ? "Turn off the oil lamp" : "Turn on the oil lamp"}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleLamp();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onToggleLamp();
+                }
+              }}
+            >
+              <Art lit={lampOn} />
+            </div>
+          ) : (
+            <div className="vb-art">
+              <Art />
+            </div>
+          )
         ) : (
           <span className="vb-decor">{seg.decor.label}</span>
         )}
@@ -2357,12 +2414,19 @@ function ContentSegment({ cellId, seg, index }) {
   return <div className="vb-seg" style={{ width }} />;
 }
 
-function CellContents({ cellId, cell }) {
+function CellContents({ cellId, cell, lampOn, onToggleLamp }) {
   if (cell.content) {
     return (
       <div className="vb-row">
         {cell.content.map((seg, i) => (
-          <ContentSegment key={i} cellId={cellId} seg={seg} index={i} />
+          <ContentSegment
+            key={i}
+            cellId={cellId}
+            seg={seg}
+            index={i}
+            lampOn={lampOn}
+            onToggleLamp={onToggleLamp}
+          />
         ))}
       </div>
     );
@@ -2411,6 +2475,7 @@ function CellContents({ cellId, cell }) {
 
 export default function Bookshelf({ onSelectCell }) {
   const [selected, setSelected] = useState(null);
+  const [lampOn, setLampOn] = useState(false);
 
   const totalWidth = LAYOUT.reduce((sum, b) => sum + b.width, 0);
   const aspect = totalWidth / 1700;
@@ -2462,7 +2527,12 @@ export default function Bookshelf({ onSelectCell }) {
                     }
                     disabled={!hasBooks}
                   >
-                    <CellContents cellId={cellId} cell={cell} />
+                    <CellContents
+                      cellId={cellId}
+                      cell={cell}
+                      lampOn={lampOn}
+                      onToggleLamp={() => setLampOn((v) => !v)}
+                    />
                     <span className="vb-id">{cellId}</span>
                   </button>
                 </div>
@@ -2675,6 +2745,15 @@ const CSS = `
   height: 100%;
   display: block;
 }
+
+.vb-lamp {
+  cursor: pointer;
+  border-radius: 6px;
+  transition: filter 200ms ease;
+}
+.vb-lamp:hover { filter: brightness(1.08); }
+.vb-lamp:focus-visible { outline: 2px solid var(--lamp, #c9a33c); outline-offset: 2px; }
+.vb-lamp.is-lit { filter: drop-shadow(0 0 10px rgba(246, 185, 74, 0.45)); }
 
 .vb-id {
   position: absolute;

@@ -37,7 +37,12 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
-      "Bash(SCREENSHOT_DIR=/private/tmp/claude-501/-Users-pete-Desktop-bookshelf-app/11af4c9b-a5c6-4cde-8a0f-153b691ba004/scratchpad/shots node verify2.mjs)"
+      "Bash(SCREENSHOT_DIR=/private/tmp/claude-501/-Users-pete-Desktop-bookshelf-app/11af4c9b-a5c6-4cde-8a0f-153b691ba004/scratchpad/shots node verify2.mjs)",
+      "Bash(curl -sI https://beccasbooks.netlify.app/)",
+      "Bash(curl -s https://beccasbooks.netlify.app/)",
+      "Bash(curl -sI https://beccasbooks.com/)",
+      "Bash(curl -s https://beccasbooks.com/)",
+      "Bash(grep -n \"\\\\.vb-art\\\\|\\\\.vb-decor\\\\|\\\\.vb-cell\\\\b\\\\|\\\\.vb-seg\\\\|CSS = \\\\`\\\\|\\\\.vb-row\" /Users/pete/Desktop/bookshelf-app/src/components/Bookshelf.jsx)"
     ]
   }
 }
