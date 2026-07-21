@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find / -maxdepth 4 -iname \"*f-column-books*\")",
+      "Read(//Users/pete/**)",
+      "Read(//Users/pete/Downloads/**)",
+      "Bash(node seed-f-column.mjs)",
+      "Bash(node migrate-f-column.mjs)",
+      "Bash(node backfill-covers.mjs)",
+      "Bash(node find-missing-isbns.mjs)",
+      "Bash(curl -s \"https://www.googleapis.com/books/v1/volumes?q=intitle:Fahrenheit%20451+inauthor:Ray%20Bradbury&maxResults=3\")",
+      "Bash(curl -s \"https://openlibrary.org/search.json?title=Charlotte%27s%20Web&author=E.B.%20White&limit=5\")",
+      "Bash(node find-missing-isbns-2.mjs)",
+      "Bash(curl -s \"https://www.googleapis.com/books/v1/volumes?q=intitle:Charlotte%27s+Web\" -o /dev/null -w \"%{http_code}\\\\n\")",
+      "Bash(node find-missing-isbns-3.mjs)",
+      "Bash(node summary.mjs)",
+      "Bash(grep -i \"\\\\.mjs$\")",
+      "Bash(curl -sf http://localhost:5174/bookshelf-app/)",
+      "Bash(node -e \"require.resolve\\('playwright'\\)\")",
+      "Bash(npx --version)",
+      "Bash(mkdir -p /private/tmp/claude-501/-Users-pete-Desktop-bookshelf-app/11af4c9b-a5c6-4cde-8a0f-153b691ba004/scratchpad/driver)",
+      "Bash(npm init *)",
+      "Bash(tmux kill-session *)",
+      "Bash(tmux new-session *)",
+      "Bash(tmux send-keys *)",
+      "Bash(timeout 20 bash -c 'until tmux capture-pane -t bookshelf-driver -p | grep -q \"driver>\"; do sleep 0.3; done')",
+      "Bash(tmux capture-pane *)",
+      "Bash(SCREENSHOT_DIR=/private/tmp/claude-501/-Users-pete-Desktop-bookshelf-app/11af4c9b-a5c6-4cde-8a0f-153b691ba004/scratchpad/shots node verify.mjs)",
+      "Bash(lsof -ti:5174 -sTCP:LISTEN)",
+      "Bash(xargs -r kill)",
+      "Bash(npm run *)",
+      "Bash(git remote *)",
+      "Bash(git fetch *)",
+      "Bash(git checkout *)",
+      "Bash(git symbolic-ref *)",
+      "Bash(git reset *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(SCREENSHOT_DIR=/private/tmp/claude-501/-Users-pete-Desktop-bookshelf-app/11af4c9b-a5c6-4cde-8a0f-153b691ba004/scratchpad/shots node verify2.mjs)"
+    ]
+  }
+}

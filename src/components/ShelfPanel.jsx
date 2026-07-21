@@ -2,6 +2,7 @@ import { useState } from "react";
 import BookForm from "./BookForm";
 import LoginModal from "./LoginModal";
 import AddBookModal from "./AddBookModal";
+import BookDetailModal from "./BookDetailModal";
 import { STATUSES, describeCell } from "../lib/cells";
 
 const statusLabel = (v) => STATUSES.find((s) => s.value === v)?.label || v;
@@ -18,6 +19,7 @@ export default function ShelfPanel({
 }) {
   const [mode, setMode] = useState(null); // null | book id being edited
   const [modal, setModal] = useState(null); // null | "login" | "add"
+  const [detailBook, setDetailBook] = useState(null);
 
   if (!cellId) {
     return (
@@ -33,7 +35,7 @@ export default function ShelfPanel({
 
   async function handleLogin(email, password) {
     const ok = await onSignIn(email, password);
-    if (ok) setModal("add");
+    if (ok) setModal(null);
     return ok;
   }
 
@@ -91,7 +93,19 @@ export default function ShelfPanel({
           </p>
           <ul className="book-list">
             {books.map((b) => (
-              <li key={b.id} className="book-row">
+              <li
+                key={b.id}
+                className="book-row book-row-clickable"
+                role="button"
+                tabIndex={0}
+                onClick={() => setDetailBook(b)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setDetailBook(b);
+                  }
+                }}
+              >
                 {b.coverUrl ? (
                   <img className="cover" src={b.coverUrl} alt="" loading="lazy" />
                 ) : (
@@ -107,13 +121,23 @@ export default function ShelfPanel({
                 </div>
                 {user && (
                   <div className="book-actions">
-                    <button type="button" className="btn btn-small" onClick={() => setMode(b.id)}>
+                    <button
+                      type="button"
+                      className="btn btn-small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setMode(b.id);
+                      }}
+                    >
                       Edit
                     </button>
                     <button
                       type="button"
                       className="btn btn-small btn-quiet"
-                      onClick={() => onRemove(b.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemove(b.id);
+                      }}
                     >
                       Remove
                     </button>
@@ -124,6 +148,8 @@ export default function ShelfPanel({
           </ul>
         </>
       )}
+
+      {detailBook && <BookDetailModal book={detailBook} onClose={() => setDetailBook(null)} />}
     </section>
   );
 }

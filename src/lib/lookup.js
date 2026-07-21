@@ -51,3 +51,32 @@ export async function lookupIsbn(raw) {
   if (!found) throw new Error("No match found. You can still enter it by hand.");
   return found;
 }
+
+async function summaryFromGoogleBooks(isbn) {
+  const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const json = await res.json();
+  return json.items?.[0]?.volumeInfo?.description || null;
+}
+
+async function summaryFromOpenLibrary(isbn) {
+  const editionRes = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
+  if (!editionRes.ok) return null;
+  const edition = await editionRes.json();
+  const workKey = edition.works?.[0]?.key;
+  if (!workKey) return null;
+  const workRes = await fetch(`https://openlibrary.org${workKey}.json`);
+  if (!workRes.ok) return null;
+  const work = await workRes.json();
+  const desc = work.description;
+  if (!desc) return null;
+  return typeof desc === "string" ? desc : desc.value || null;
+}
+
+/** ISBN -> short description, trying Google Books then Open Library's work record. */
+export async function lookupSummary(raw) {
+  const isbn = normalizeIsbn(raw);
+  if (!isValidIsbn(isbn)) return null;
+  return (await summaryFromGoogleBooks(isbn)) || (await summaryFromOpenLibrary(isbn));
+}

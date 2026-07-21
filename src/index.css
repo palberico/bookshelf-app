@@ -146,6 +146,18 @@ code { font-size: 0.9em; background: rgba(0,0,0,0.06); padding: 1px 4px; border-
 
 .book-actions { display: flex; gap: 6px; }
 
+.book-row-clickable { cursor: pointer; }
+.book-row-clickable:hover { border-color: #b9b2a5; }
+.book-row-clickable:focus-visible { outline: 2px solid var(--lamp); outline-offset: 1px; }
+
+/* --- book detail modal --- */
+.book-detail { display: grid; grid-template-columns: 96px 1fr; gap: 16px; }
+.book-detail-cover { width: 96px; height: 140px; object-fit: cover; border-radius: 4px; }
+.book-detail-meta { display: grid; gap: 4px; align-content: start; }
+.book-detail-authors { margin: 0; font-size: 14px; color: var(--muted); }
+.book-detail-summary { margin-top: 14px; font-size: 14px; line-height: 1.5; }
+.book-detail-summary p { margin: 0; }
+
 /* --- forms --- */
 .book-form {
   display: grid;
