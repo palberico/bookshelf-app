@@ -50,7 +50,7 @@ export default function ShelfPanel({
             className="btn btn-primary"
             onClick={() => setModal(user ? "add" : "login")}
           >
-            Add a book
+            {user ? "Add a book" : "Login"}
           </button>
         )}
       </header>
@@ -105,18 +105,20 @@ export default function ShelfPanel({
                   <span className="book-status">{statusLabel(b.status)}</span>
                   {b.notes && <span className="book-notes">{b.notes}</span>}
                 </div>
-                <div className="book-actions">
-                  <button type="button" className="btn btn-small" onClick={() => setMode(b.id)}>
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-small btn-quiet"
-                    onClick={() => onRemove(b.id)}
-                  >
-                    Remove
-                  </button>
-                </div>
+                {user && (
+                  <div className="book-actions">
+                    <button type="button" className="btn btn-small" onClick={() => setMode(b.id)}>
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-small btn-quiet"
+                      onClick={() => onRemove(b.id)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
               </li>
             ))}
           </ul>

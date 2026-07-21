@@ -37,7 +37,7 @@ export default function App() {
       )}
 
       <header className="app-head">
-        <h1 className="app-title">The Shelf</h1>
+        <h1 className="app-title">Becca's Bookshelf</h1>
         <SearchBar value={term} onChange={setTerm} results={results} onPick={handlePickResult} />
       </header>
 
