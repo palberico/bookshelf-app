@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useMountainTime, clockHandAngles } from "../hooks/useMountainTime";
 
 /* ------------------------------------------------------------------
    SHELF LAYOUT — all seven bays measured off the straight-on photos.
@@ -415,8 +416,8 @@ const LAYOUT = [
               ],
             },
           },
-          { width: 0.048 },
-          { width: 0.192, decor: { label: "cuckoo clock", art: "cuckooClock" } },
+          { width: 0.02 },
+          { width: 0.24, decor: { label: "cuckoo clock", art: "cuckooClock" } },
         ],
       },
       {
@@ -920,6 +921,10 @@ function frondLeaflets(o, c, e, n) {
 }
 
 function PottedFern() {
+  const time = useMountainTime();
+  const { hourAngle } = clockHandAngles(time);
+  const timerRotate = hourAngle - 77.905;
+
   const O = [56, 62];
   const fronds = [
     { c: [32, 50], e: [7, 43] },
@@ -1011,7 +1016,9 @@ function PottedFern() {
       />
       <circle cx="20" cy="85.2" r="8.6" fill="#4c5154" />
       <circle cx="20" cy="85.2" r="8.6" fill="none" stroke="#3a3e41" strokeWidth="0.6" />
-      <path d="M20,85.2 L28.4,83.4 L20,86.6 Z" fill="#e8722c" />
+      <g transform={`rotate(${timerRotate} 20 85.2)`}>
+        <path d="M20,85.2 L28.4,83.4 L20,86.6 Z" fill="#e8722c" />
+      </g>
       <circle cx="20" cy="85.2" r="1.1" fill="#e8722c" />
       <circle cx="16.4" cy="90.4" r="0.9" fill="#cfd3d4" />
     </svg>
@@ -1325,6 +1332,14 @@ function BookNookMuseum() {
 }
 
 function CuckooClock() {
+  const time = useMountainTime();
+  const { hourAngle, minuteAngle } = clockHandAngles(time);
+  const hourRotate = hourAngle - 250.115;
+  const minuteRotate = minuteAngle - 272.526;
+
+  const hour12 = time.hours % 12 === 0 ? 12 : time.hours % 12;
+  const birdVisible = time.minutes === 0 && time.seconds < hour12;
+
   const ticks = [1, 2, 4, 5, 7, 8, 10, 11].map((h) => {
     const a = (h * Math.PI) / 6 - Math.PI / 2;
     return {
@@ -1344,6 +1359,17 @@ function CuckooClock() {
       aria-label="Modern black cuckoo clock"
     >
       <ellipse cx="35" cy="116.6" rx="26" ry="1.4" fill="#000" opacity="0.14" />
+
+      {birdVisible && (
+        <g className="vb-cuckoo-bird">
+          <path d="M33.5,3.6 C32,2.6 31.3,4.1 33,4.7 C33.9,5 34.4,4.3 33.5,3.6 Z" fill="#6fb3ca" />
+          <path d="M32.5,4.2 C31,4.9 30.6,5.9 32.3,5.7 C33.1,5.5 33.3,4.7 32.5,4.2 Z" fill="#6fb3ca" />
+          <ellipse cx="35.4" cy="3.6" rx="2.6" ry="1.7" fill="#8ecbe0" />
+          <circle cx="37.4" cy="2.5" r="1.15" fill="#8ecbe0" />
+          <path d="M38.4,2.3 L39.7,2.0 L38.4,2.9 Z" fill="#e8a23c" />
+          <circle cx="37.7" cy="2.2" r="0.24" fill="#1a1a1a" />
+        </g>
+      )}
 
       {/* body */}
       <rect x="11" y="38" width="48" height="78" fill="#141414" />
@@ -1389,8 +1415,8 @@ function CuckooClock() {
         <text x="35" y="87.4">KOO</text>
       </g>
       <g stroke="#f4f4f4" strokeLinecap="round" fill="none">
-        <path d="M35,86 L21.4,85.4" strokeWidth="1.5" />
-        <path d="M35,86 L25.6,89.4" strokeWidth="1.3" />
+        <path d="M35,86 L21.4,85.4" strokeWidth="1.5" transform={`rotate(${minuteRotate} 35 86)`} />
+        <path d="M35,86 L25.6,89.4" strokeWidth="1.3" transform={`rotate(${hourRotate} 35 86)`} />
       </g>
       <circle cx="35" cy="86" r="1.7" fill="#dcdcdc" />
       <circle cx="35" cy="112" r="0.9" fill="#2a2a2a" />
@@ -1764,6 +1790,12 @@ function GreenVase() {
 }
 
 function MarbleClock() {
+  const time = useMountainTime();
+  const { hourAngle, minuteAngle, secondAngle } = clockHandAngles(time);
+  const hourRotate = hourAngle - 128.66;
+  const minuteRotate = minuteAngle - 209.745;
+  const secondRotate = secondAngle - 289.179;
+
   return (
     <svg
       viewBox="0 0 100 84"
@@ -1804,11 +1836,17 @@ function MarbleClock() {
 
       {/* hands */}
       <g stroke="#b8912f" strokeLinecap="round" fill="#b8912f">
-        <path d="M50,36 L27,28" strokeWidth="0.7" fill="none" />
-        <path d="M50,36 L60,44" strokeWidth="1" fill="none" />
-        <path d="M58.4,42.6 L64,45.4 L59.6,45.6 Z" />
-        <path d="M50,36 L42,50" strokeWidth="1" fill="none" />
-        <path d="M43.4,47.6 L41,53.4 L40.2,49 Z" />
+        <g transform={`rotate(${secondRotate} 50 36)`}>
+          <path d="M50,36 L27,28" strokeWidth="0.7" fill="none" />
+        </g>
+        <g transform={`rotate(${hourRotate} 50 36)`}>
+          <path d="M50,36 L60,44" strokeWidth="1" fill="none" />
+          <path d="M58.4,42.6 L64,45.4 L59.6,45.6 Z" />
+        </g>
+        <g transform={`rotate(${minuteRotate} 50 36)`}>
+          <path d="M50,36 L42,50" strokeWidth="1" fill="none" />
+          <path d="M43.4,47.6 L41,53.4 L40.2,49 Z" />
+        </g>
       </g>
       <circle cx="50" cy="36" r="2.1" fill="#c9a33c" />
       <circle cx="50" cy="36" r="0.9" fill="#8f6f22" />
@@ -1887,6 +1925,15 @@ function ElephantBookend() {
 }
 
 function DigitalClockFrame() {
+  const time = useMountainTime();
+  const { hourAngle, minuteAngle, secondAngle } = clockHandAngles(time);
+  const minuteRotate = minuteAngle - 40.855;
+  const hourRotate = hourAngle - 46.042;
+  const secondRotate = secondAngle - 187.001;
+
+  const hour12 = time.hours % 12 === 0 ? 12 : time.hours % 12;
+  const digital = `${String(hour12).padStart(2, "0")}:${String(time.minutes).padStart(2, "0")}`;
+
   const ticks = Array.from({ length: 12 }, (_, i) => {
     const a = (i * Math.PI) / 6 - Math.PI / 2;
     return {
@@ -1935,9 +1982,9 @@ function DigitalClockFrame() {
         ))}
       </g>
       <g stroke="#f2f4f8" strokeLinecap="round" fill="none">
-        <path d="M36,38 L42.4,30.6" strokeWidth="0.9" />
-        <path d="M36,38 L41.6,32.6" strokeWidth="1.1" />
-        <path d="M36,38 L34.6,49.4" strokeWidth="0.6" />
+        <path d="M36,38 L42.4,30.6" strokeWidth="0.9" transform={`rotate(${minuteRotate} 36 38)`} />
+        <path d="M36,38 L41.6,32.6" strokeWidth="1.1" transform={`rotate(${hourRotate} 36 38)`} />
+        <path d="M36,38 L34.6,49.4" strokeWidth="0.6" transform={`rotate(${secondRotate} 36 38)`} />
       </g>
       <circle cx="36" cy="38" r="1.5" fill="#dfe6f4" />
 
@@ -1950,7 +1997,7 @@ function DigitalClockFrame() {
         fontSize="11"
         fill="#aebbe6"
       >
-        01:02
+        {digital}
       </text>
       <g fill="#8c98bc">
         <rect x="47" y="39" width="4.4" height="1.6" rx="0.4" />
@@ -2754,6 +2801,15 @@ const CSS = `
 .vb-lamp:hover { filter: brightness(1.08); }
 .vb-lamp:focus-visible { outline: 2px solid var(--lamp, #c9a33c); outline-offset: 2px; }
 .vb-lamp.is-lit { filter: drop-shadow(0 0 10px rgba(246, 185, 74, 0.45)); }
+
+.vb-cuckoo-bird {
+  transform-origin: 35px 3.6px;
+  animation: vbBirdPop 220ms ease-out;
+}
+@keyframes vbBirdPop {
+  0% { opacity: 0; transform: scale(0.4) translateY(2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
 
 .vb-id {
   position: absolute;
