@@ -1362,17 +1362,6 @@ function CuckooClock() {
     >
       <ellipse cx="35" cy="116.6" rx="26" ry="1.4" fill="#000" opacity="0.14" />
 
-      {birdVisible && (
-        <g className="vb-cuckoo-bird">
-          <path d="M33.5,3.6 C32,2.6 31.3,4.1 33,4.7 C33.9,5 34.4,4.3 33.5,3.6 Z" fill="#6fb3ca" />
-          <path d="M32.5,4.2 C31,4.9 30.6,5.9 32.3,5.7 C33.1,5.5 33.3,4.7 32.5,4.2 Z" fill="#6fb3ca" />
-          <ellipse cx="35.4" cy="3.6" rx="2.6" ry="1.7" fill="#8ecbe0" />
-          <circle cx="37.4" cy="2.5" r="1.15" fill="#8ecbe0" />
-          <path d="M38.4,2.3 L39.7,2.0 L38.4,2.9 Z" fill="#e8a23c" />
-          <circle cx="37.7" cy="2.2" r="0.24" fill="#1a1a1a" />
-        </g>
-      )}
-
       {/* body */}
       <rect x="11" y="38" width="48" height="78" fill="#141414" />
 
@@ -1384,7 +1373,26 @@ function CuckooClock() {
       {/* cuckoo door */}
       <circle cx="35" cy="56" r="11" fill="#0b0b0b" />
       <circle cx="35" cy="56" r="11" fill="none" stroke="#2c2c2c" strokeWidth="0.8" />
-      <path d="M24.4,56 L45.6,56" stroke="#242424" strokeWidth="0.7" />
+      {birdVisible ? (
+        <g className="vb-cuckoo-bird">
+          {/* shutter doors, swung open */}
+          <rect x="19.6" y="52.2" width="4.6" height="7.6" rx="1" fill="#1a1a1a" transform="rotate(-32 24.4 56)" />
+          <rect x="45.8" y="52.2" width="4.6" height="7.6" rx="1" fill="#1a1a1a" transform="rotate(32 45.6 56)" />
+
+          {/* perch */}
+          <rect x="30" y="62.2" width="10" height="1.6" rx="0.6" fill="#2a2a2a" />
+
+          {/* bird popping out of the doorway */}
+          <path d="M31.6,56.4 C29.6,55.6 29,58 31,58.8 C32.1,59.2 32.7,58 31.6,56.4 Z" fill="#6fb3ca" />
+          <path d="M38.4,56.4 C40.4,55.6 41,58 39,58.8 C37.9,59.2 37.3,58 38.4,56.4 Z" fill="#6fb3ca" />
+          <ellipse cx="35" cy="57.4" rx="3.5" ry="5.2" fill="#8ecbe0" />
+          <circle cx="35" cy="50.4" r="2.5" fill="#8ecbe0" />
+          <path d="M36.8,50.2 L38.4,49.8 L36.9,51 Z" fill="#e8a23c" />
+          <circle cx="36.1" cy="49.7" r="0.26" fill="#1a1a1a" />
+        </g>
+      ) : (
+        <path d="M24.4,56 L45.6,56" stroke="#242424" strokeWidth="0.7" />
+      )}
 
       {/* dial */}
       <g fill="#f2f2f2" fontFamily="Helvetica, Arial, sans-serif" fontSize="5.4" textAnchor="middle">
@@ -2805,11 +2813,11 @@ const CSS = `
 .vb-lamp.is-lit { filter: drop-shadow(0 0 10px rgba(246, 185, 74, 0.45)); }
 
 .vb-cuckoo-bird {
-  transform-origin: 35px 3.6px;
+  transform-origin: 35px 60px;
   animation: vbBirdPop 220ms ease-out;
 }
 @keyframes vbBirdPop {
-  0% { opacity: 0; transform: scale(0.4) translateY(2px); }
+  0% { opacity: 0; transform: scale(0.5) translateY(4px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
